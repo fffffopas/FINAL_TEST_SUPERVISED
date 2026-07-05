@@ -1,9 +1,9 @@
+import pandas as pd
+import numpy as np
+import joblib
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import joblib
-from  Auxiliary_elements import to_delete, to_num_nbin
-import numpy as np
-import pandas as pd
+from auxiliary_elements import to_delete, to_num_nonbin
 
 
 app = FastAPI(title="Telco-Customer-Churn predictor")
@@ -55,7 +55,7 @@ class Features(BaseModel):
                 "PaperlessBilling":"Yes",
                 "PaymentMethod" : "Electronic check",
                 "MonthlyCharges":29.85,
-                "TotalCharges": 29.85
+                "TotalCharges": 29.85,
             }
         }
     }
@@ -82,7 +82,7 @@ def predict(features:Features):
         prediction = model.predict(input_data)
 
         return{
-            "prediction": prediction.tolist()
+            "prediction": prediction.tolist(),
         }
     
     except Exception as e:
