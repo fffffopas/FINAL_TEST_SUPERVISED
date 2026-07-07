@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 
 def to_num_nonbin(X):
     pd.set_option('future.no_silent_downcasting', True)
