@@ -7,7 +7,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
-COPY Auxiliary_elements Auxiliary_elements
+COPY auxiliary_elements auxiliary_elements
 COPY model model
 
 EXPOSE 8000

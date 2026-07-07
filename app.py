@@ -1,9 +1,8 @@
 import pandas as pd
-import numpy as np
 import joblib
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from auxiliary_elements import to_delete, to_num_nonbin
+from auxiliary_elements import to_delete, to_num_nonbin # noqa: F401
 
 
 app = FastAPI(title="Telco-Customer-Churn predictor")
