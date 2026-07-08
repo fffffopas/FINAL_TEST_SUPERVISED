@@ -60,8 +60,9 @@ jobs:
         uses: docker/setup-buildx-action@v4
 
       - name: Debug vars
-        run: |
-        echo "DOCKER_USERNAME is: '${{ vars.DOCKER_USERNAME }}'
+        run: echo "DOCKER_USERNAME is $DOCKER_USERNAME"
+        env:
+        DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
 
       - name: Сборка и отправка образа
         uses: docker/build-push-action@v7
