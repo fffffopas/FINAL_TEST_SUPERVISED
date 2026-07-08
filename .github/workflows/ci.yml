@@ -3,6 +3,7 @@ name: API CI/CD
 on:
   push:
     branches: ["main"]
+    tags: ["v*.*"]
   pull_request:
     branches: ["main"]
 
@@ -35,3 +36,30 @@ jobs:
       - name: Запуск автотестов (Pytest)
         run: pytest
 
+  build-and-push:
+    needs: build-and-test
+    if: startsWith(github.ref, "refs/tags/")
+    runs-of: ubuntu-latest
+
+    steps:
+      - name: Скачиваем код
+        uses: action/checkout@v4
+
+      - name: Происходит авторизация в Docker Hub :)
+        uses: docker/login-action@v3
+        with: 
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Получаем версию релиза
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
+      - name: Сборка и отпрака Docker-образа
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/bmi-api:latest
+            ${{ secrets.DOCKER_TOKEN }}/bmi-api:${{ env.VERSION }}
