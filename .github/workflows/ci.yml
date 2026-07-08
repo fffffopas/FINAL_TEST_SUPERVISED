@@ -59,6 +59,10 @@ jobs:
       - name: Настройка Docker Buildx
         uses: docker/setup-buildx-action@v4
 
+      - name: Debug vars
+        run: |
+        echo "DOCKER_USERNAME is: '${{ vars.DOCKER_USERNAME }}'
+
       - name: Сборка и отправка образа
         uses: docker/build-push-action@v7
         with:
