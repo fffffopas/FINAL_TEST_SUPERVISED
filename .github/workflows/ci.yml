@@ -62,7 +62,7 @@ jobs:
       - name: Debug vars
         run: echo "DOCKER_USERNAME is $DOCKER_USERNAME"
         env:
-        DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
+          DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
 
       - name: Сборка и отправка образа
         uses: docker/build-push-action@v7
