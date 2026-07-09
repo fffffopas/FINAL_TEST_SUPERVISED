@@ -2,12 +2,12 @@ import pandas as pd
 import joblib
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from auxiliary_elements import to_delete, to_num_nonbin # noqa: F401
+from auxiliary_elements import to_delete, to_num_nonbin, to_category # noqa: F401
 
 
 app = FastAPI(title="Telco-Customer-Churn predictor")
 
-with open("model/model.joblib", "rb") as f:
+with open("model/model_cb.joblib", "rb") as f:
     model = joblib.load(f)
 
 class Features(BaseModel):
@@ -74,10 +74,9 @@ def health_check():
     return {"status" :"healthy", "model_loaded" : model is not None}
 
 @app.post("/predict")
-def predict(features:Features):
+def predict(features: list[Features]):
     try:
-        input_data = pd.DataFrame([features.model_dump()])
-        
+        input_data = pd.DataFrame([feature.model_dump() for feature in features])
         prediction = model.predict(input_data)
 
         return{

@@ -6,5 +6,10 @@ def to_num_nonbin(X):
     X = X.replace("Yes", 1).astype(int)
     return X
 
+def to_category(X, col):
+    X = X.copy()
+    X[col] = X[col].astype('category')
+    return X
+
 def to_delete(X):
     return X.drop(["customerID"], axis=1)
