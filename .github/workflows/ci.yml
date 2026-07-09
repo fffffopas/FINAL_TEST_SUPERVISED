@@ -59,8 +59,7 @@ jobs:
       - name: Настройка Docker Buildx
         uses: docker/setup-buildx-action@v4
 
-      - name: Debug vars
-        run: echo "DOCKER_USERNAME is $DOCKER_USERNAME"
+      - run: echo "len=${#DOCKER_USERNAME}"
         env:
           DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
 
