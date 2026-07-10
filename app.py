@@ -1,6 +1,7 @@
 import pandas as pd
 import joblib
 from fastapi import FastAPI, HTTPException
+from typing import Literal
 from pydantic import BaseModel
 from auxiliary_elements import to_delete, to_num_nonbin, to_category # noqa: F401
 
@@ -12,29 +13,31 @@ with open("model/model_cb.joblib", "rb") as f:
 
 class Features(BaseModel):
     customerID: str
-    gender: str
-    SeniorCitizen: int
-    Partner: str
-    Dependents: str
+    gender: Literal['Male', 'Female']
+    SeniorCitizen: Literal[0, 1]
+    Partner: Literal['No', 'Yes']
+    Dependents: Literal['No', 'Yes']
     tenure: int
-    PhoneService: str
-    MultipleLines: str
-    InternetService: str
-    OnlineSecurity: str
-    OnlineBackup: str
-    DeviceProtection: str
-    TechSupport: str
-    StreamingTV: str
-    StreamingMovies: str
-    Contract: str
-    PaperlessBilling: str
-    PaymentMethod: str
+    PhoneService: Literal['No', 'Yes']
+    MultipleLines: Literal['No phone service', 'No', 'Yes']
+    InternetService: Literal['DSL', 'Fiber optic', 'No']
+    OnlineSecurity: Literal['No', 'Yes', 'No internet service']
+    OnlineBackup: Literal['Yes', 'No', 'No internet service']
+    DeviceProtection: Literal['No', 'Yes', 'No internet service']
+    TechSupport: Literal['No', 'Yes', 'No internet service']
+    StreamingTV: Literal['No', 'Yes', 'No internet service']
+    StreamingMovies: Literal['No', 'Yes', 'No internet service']
+    Contract: Literal['Month-to-month', 'One year', 'Two year']
+    PaperlessBilling: Literal['Yes', 'No']
+    PaymentMethod: Literal['Electronic check', 'Mailed check', 
+                           'Bank transfer (automatic)',
+                           'Credit card (automatic)']
     MonthlyCharges: float
     TotalCharges: float
 
     model_config = {
         "json_schema_extra":{
-            "example":{
+            "example":[{
                 "customerID": "1234-ABCD",
                 "gender" : "Male",
                 "SeniorCitizen": 0,
@@ -55,7 +58,7 @@ class Features(BaseModel):
                 "PaymentMethod" : "Electronic check",
                 "MonthlyCharges":29.85,
                 "TotalCharges": 29.85,
-            }
+            }]
         }
     }
 @app.get("/")
