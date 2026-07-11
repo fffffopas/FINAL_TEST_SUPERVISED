@@ -2,7 +2,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import FunctionTransformer, OneHotEncoder
 from catboost import CatBoostClassifier
-from _transformer_function import to_num_nonbin, to_delete, to_category
+from auxiliary_elements import to_num_nonbin, to_delete, to_category
 
 def create_pipeline():
     binary_column = [

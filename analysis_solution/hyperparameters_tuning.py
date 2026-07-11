@@ -8,7 +8,7 @@ import mlflow
 
 from sklearn.model_selection import cross_val_score
 from optuna.samplers import TPESampler
-from auxiliary_elements import create_pipeline
+from auxiliary_elements import create_pipeline, load_train_test
 from loguru import logger
 
 
@@ -16,22 +16,6 @@ logger.remove()
 logger.add(sys.stdout, format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}")
 warnings.filterwarnings("ignore")
 optuna.logging.set_verbosity(optuna.logging.ERROR)
-
-def load_train_test(experiment_id):
-    last_run_id = mlflow.search_runs(
-        experiment_ids=[experiment_id],
-        filter_string="tags.mlflow.runName = 'data-splitting' and status = 'FINISHED'",
-        order_by=["start_time DESC"],
-    ).loc[0, "run_id"]
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        train_path = mlflow.artifacts.download_artifacts(run_id=last_run_id, artifact_path="datasets/train.csv", dst_path=tmpdir)
-        test_path =  mlflow.artifacts.download_artifacts(run_id=last_run_id, artifact_path="datasets/test.csv", dst_path=tmpdir)
-        train = pd.read_csv(train_path)
-        test = pd.read_csv(test_path)
-
-    logger.info(f"Loaded train/test from run {last_run_id}")
-    return train, test
 
 def objective(trial, pipeline_cat_boost, X_train, y_train):
     params = {
