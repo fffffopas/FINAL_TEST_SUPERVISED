@@ -1,5 +1,4 @@
 import sys
-import os
 import pandas as pd
 import optuna
 import argparse
@@ -7,13 +6,9 @@ import tempfile
 import warnings
 import mlflow
 
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import FunctionTransformer, OneHotEncoder
 from sklearn.model_selection import cross_val_score
 from optuna.samplers import TPESampler
-from catboost import CatBoostClassifier
-from auxiliary_elements import to_num_nonbin, to_delete, to_category
+from auxiliary_elements import create_pipeline
 from loguru import logger
 
 
@@ -38,37 +33,6 @@ def load_train_test(experiment_id):
     logger.info(f"Loaded train/test from run {last_run_id}")
     return train, test
 
-
-binary_column = [
-    "gender", "SeniorCitizen", "Partner",
-    "Dependents", "PhoneService", "PaperlessBilling",
-]
-to_binary_column = [
-    "MultipleLines", "OnlineSecurity", "OnlineBackup",
-    "DeviceProtection", "TechSupport", "StreamingTV",
-    "StreamingMovies",
-]
-cat_column = [
-    "remainder__InternetService", "remainder__Contract",
-    "remainder__PaymentMethod",
-]
-
-def create_pipeline(model):
-    preprocess = ColumnTransformer(transformers=[
-        ("to_num_bin", OneHotEncoder(drop="first", handle_unknown="ignore", sparse_output=False), binary_column),
-        ("to_num_nbin", FunctionTransformer(to_num_nonbin), to_binary_column),
-    ], remainder="passthrough")
-
-    preprocess.set_output(transform="pandas")
-
-    pipe = Pipeline([
-        ("to_delete", FunctionTransformer(to_delete)),
-        ("preprocess", preprocess),
-        ("to_category", FunctionTransformer(to_category, kw_args={"col": cat_column})),
-        ("model", model),
-    ])
-    return pipe
-
 def objective(trial, pipeline_cat_boost, X_train, y_train):
     params = {
         "model__n_estimators": trial.suggest_int("n_estimators", 50, 500),
@@ -85,7 +49,6 @@ def objective(trial, pipeline_cat_boost, X_train, y_train):
         mlflow.log_metric("accuracy", score)
         logger.info(f"Trial {trial.number}, accuracy: {score:.4f}")
         return score
-    
 
 if __name__ == "__main__":
     N_TRIALS = 25
@@ -102,10 +65,7 @@ if __name__ == "__main__":
         target_col = "Churn"
         X_train, y_train = train.drop([target_col], axis=1), train[target_col]
 
-        pipeline_cat_boost = create_pipeline(
-            CatBoostClassifier(cat_features=tuple(cat_column), verbose=0,
-                                auto_class_weights="Balanced", random_seed=42)
-        )
+        pipeline_cat_boost = create_pipeline()
 
         study = optuna.create_study(direction="maximize", sampler=TPESampler(seed=42))
         study.optimize(lambda trial: objective(trial, pipeline_cat_boost, X_train, y_train), n_trials=N_TRIALS)
