@@ -1,0 +1,17 @@
+name: FINAL_TEST_SUPERVISED
+
+entry_points:
+  data_splitting:
+    parameters:
+      test-size: {type: float, default: 0.33}
+    command: "python analysis_solution/data_splitting.py --test-size {test-size}"
+  hyperparameters_tuning:
+    parameters:
+      n-trials: {type: int, default: 10}
+    command: "python analysis_solution/hyperparameters_tuning.py --n-trials {n-trials}"
+  model_training:
+    command: "python analysis_solution/model_training.py"
+  data_evaluation:
+    parameters:
+      eval-dataset: {type: str}
+    command: "python analysis_solution/data_evaluation.py --eval-dataset {eval-dataset}"

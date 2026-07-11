@@ -5,3 +5,6 @@ catboost_info/
 test.ipynb
 .ruff_cache/
 .pytest_cache/
+mlflow.db
+mlruns/
+.vscode/
