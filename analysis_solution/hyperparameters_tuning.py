@@ -6,7 +6,7 @@ import mlflow
 
 from sklearn.model_selection import cross_val_score
 from optuna.samplers import TPESampler
-from auxiliary_elements import create_pipeline, load_train_test
+from auxiliary_elements_for_as import create_pipeline, load_train_test
 from loguru import logger
 
 

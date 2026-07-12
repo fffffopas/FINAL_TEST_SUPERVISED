@@ -3,7 +3,7 @@ import mlflow
 import warnings
 import logging
 from loguru import logger
-from auxiliary_elements import load_train_test, create_pipeline
+from auxiliary_elements_for_as import load_train_test, create_pipeline
 
 logger.remove()
 logger.add(sys.stdout, format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}")
