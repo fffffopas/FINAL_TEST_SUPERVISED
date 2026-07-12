@@ -25,7 +25,7 @@ for module, args in steps:
 if WANT_DUMP == "Нет" and input("Желаете сохранить модель(Да/Нет, Вы можете посмотреть метрики в ui(mlflow ui)): ") == "Да":
     print(f"{'='*50}Выполняется сохранение модели{'='*50}")
     result = subprocess.run([sys.executable, "-m",
-                                f"analysis_solution.dumping_model", *args],
+                                "analysis_solution.dumping_model", *args],
                                 check=True
                             )
     

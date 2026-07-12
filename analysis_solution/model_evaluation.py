@@ -22,4 +22,4 @@ if __name__ == "__main__":
         logger.info(f"Evaluated model version: {last_version}")
 
         mlflow.evaluate(data=eval_dataset, model_type="classifier", model=f"models:/ChurnModel/{last_version}")
-        logger.info(f"Model evaluation finished")
+        logger.info("Model evaluation finished")

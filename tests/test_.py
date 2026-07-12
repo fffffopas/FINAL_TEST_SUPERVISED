@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.metrics import recall_score, precision_score, accuracy_score
 from fastapi.testclient import TestClient
-from app import app
+from src.app import app
 
 client = TestClient(app)
 
@@ -11,7 +11,7 @@ def test_calculate_model():
     y = tests["Churn"]
 
     data = X.to_dict(orient="records")
-    #print(data)
+
     response = client.post("/predict", json=data)
     assert response.status_code == 200
 

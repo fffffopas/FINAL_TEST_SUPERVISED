@@ -1,8 +1,6 @@
 import sys
-import pandas as pd
 import optuna
 import argparse
-import tempfile
 import warnings
 import mlflow
 

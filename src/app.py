@@ -8,8 +8,9 @@ from auxiliary_elements import to_delete, to_num_nonbin, to_category # noqa: F40
 
 app = FastAPI(title="Telco-Customer-Churn predictor")
 
-with open("model/model_cb.joblib", "rb") as f:
-    model = joblib.load(f)
+with open("model/model", "rb") as f:
+    context = joblib.load(f)
+    model = context["model"]
 
 class Features(BaseModel):
     customerID: str
@@ -74,7 +75,11 @@ def read_root():
 
 @app.get("/health")
 def health_check():
-    return {"status" :"healthy", "model_loaded" : model is not None}
+    return {"status" :"healthy", 
+            "model_loaded" : model is not None,
+            "model_verison" : context["temp_version"],
+            "model_metrics" : context["metrics"]
+            }
 
 @app.post("/predict")
 def predict(features: list[Features]):
