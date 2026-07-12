@@ -19,11 +19,12 @@ optuna.logging.set_verbosity(optuna.logging.ERROR)
 
 def objective(trial, pipeline_cat_boost, X_train, y_train):
     params = {
-        "model__n_estimators": trial.suggest_int("n_estimators", 50, 500),
-        "model__max_depth": trial.suggest_int("max_depth", 2, 10),
-        "model__learning_rate": trial.suggest_float("learning_rate", 1e-4, 0.3, log=True),
+        "model__n_estimators": trial.suggest_int("n_estimators", 150, 1000),
+        "model__max_depth": trial.suggest_int("max_depth", 2, 8),
+        "model__learning_rate": trial.suggest_float("learning_rate", 1e-4, 0.2, log=True),
         "model__subsample": trial.suggest_float("subsample", 0.5, 1.0),
         "model__l2_leaf_reg": trial.suggest_float("l2_leaf_reg", 1, 10),
+        "model__grow_policy" : trial.suggest_categorical("grow_policy", ["SymmetricTree", "Depthwise", "Lossguide"]),
     }
 
     with mlflow.start_run(nested=True):

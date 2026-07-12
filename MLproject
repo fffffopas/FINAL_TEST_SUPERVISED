@@ -14,4 +14,4 @@ entry_points:
   data_evaluation:
     parameters:
       eval-dataset: {type: str}
-    command: "python analysis_solution/data_evaluation.py --eval-dataset {eval-dataset}"
+    command: "python analysis_solution/model_evaluation.py"
