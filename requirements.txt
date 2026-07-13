@@ -5,6 +5,4 @@ numpy==2.4.6
 pydantic==2.13.4
 pandas==2.3.3
 catboost==1.2.10
-pytest==9.1.1
 httpx2==2.5.0
-ruff==0.15.20

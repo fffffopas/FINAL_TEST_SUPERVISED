@@ -29,12 +29,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install -r requirements_dev.txt
 
       - name: Проверка кода линтером (Ruff)
         run: ruff check .
 
       - name: Запуск автотестов (Pytest)
-        run: pytest
+        run: pytest -m "not docker"
 
   build-and-push:
     needs: build-and-test
@@ -43,6 +44,18 @@ jobs:
     steps:
       - name: Скачиваем код
         uses: actions/checkout@v6
+
+      - name: Устанавливаем Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Устанавливаем зависимости для тестов
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements_dev.txt
 
       - name: Извлечение метаданных образа Docker
         id: meta
@@ -59,9 +72,25 @@ jobs:
       - name: Настройка Docker Buildx
         uses: docker/setup-buildx-action@v4
 
-      - run: echo "len=${#DOCKER_USERNAME}"
-        env:
-          DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
+      - name: Локальная сборка образа для теста
+        uses: docker/build-push-action@v7
+        with:
+          push: false
+          load: true
+          tags: churn-api:test
+
+      - name: Запуск контейнера
+        run: docker run -d -p 8000:8000 --name churn-test churn-api:test
+
+      - name: Ожидание готовности приложения
+        run: sleep 5
+
+      - name: Запуск тестов против контейнера
+        run: pytest -m docker
+
+      - name: Остановка контейнера
+        if: always()
+        run: docker stop churn-test
 
       - name: Сборка и отправка образа
         uses: docker/build-push-action@v7
