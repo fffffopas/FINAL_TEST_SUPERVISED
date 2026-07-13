@@ -9,11 +9,26 @@
 В дальнейшем планирутся добавить 2 модели на схожие тематики
 
 В настоящий момент времени микросервис способен обрабатывать множество запросов за раз (не асинхронно, в формате dict(orient="records"))
+
 ### Подробнее об обучение
 Тюниг проводился с помощью optuna(всего 25 trials)
 
 По итогу были accuracy всех 25 запусков:
-![Screenshot](https://github.com/fffffopas/FINAL_TEST_SUPERVISED/blob/main/Accuracy.png)
+
+
+![Screenshot](images/Accuracy.png)
+
+
+И лучшие гиперпараметры:
+
+
+![Screenshot](images/best_params.png)
+
+
+Итоговая модель была обучена на этих параметрах и после оценки, получились следующие метрики:
+
+
+![Screenshot](images/all_metrics.png)
 
 
 ### Структура проекта
@@ -99,6 +114,26 @@ LightGBMClassifier is also used in the stack, but in the optimal version of the 
  In the future, it is planned to add 2 models on similar topics
 
 At the moment, the microservice is capable of processing multiple requests at once (not asynchronously, in the format of dict(orient="records"))
+
+### More about the training
+The tuning was performed using optuna (25 trials in total)
+
+The results were the accuracy of all 25 runs:
+
+
+![Screenshot](images/Accuracy.png)
+
+
+And the best hyperparameters:
+
+
+![Screenshot](images/best_params.png)
+
+
+The final model was trained using these parameters, and after evaluation, the following metrics were obtained:
+
+
+![Screenshot](images/all_metrics.png)
 
 
 ### Структура проекта
