@@ -9,44 +9,68 @@
 В дальнейшем планирутся добавить 2 модели на схожие тематики
 
 В настоящий момент времени микросервис способен обрабатывать множество запросов за раз (не асинхронно, в формате dict(orient="records"))
+### Подробнее об обучение
+Тюниг проводился с помощью optuna(всего 25 trials)
+
+По итогу были accuracy всех 25 запусков:
+![Screenshot](https://github.com/fffffopas/FINAL_TEST_SUPERVISED/blob/main/Accuracy.png)
 
 
 ### Структура проекта
 ```Project:.
 │   .gitignore
-│   app.py
 │   Dockerfile
+│   mlflow.db
+│   MLproject
+│   pytest.ini
 │   README.md
 │   requirements.txt
-│   test.ipynb
+│   requirements_dev.txt
 │   
 ├───.github
 │   └───workflows
 │           ci.yml
-│           
-├───analysis_solution
-│       cohort_analysis_of_churn.ipynb
-│       EDA.ipynb
-│       pipeline.ipynb
+│     
 │       
+├───analysis_solution
+│   │   cohort_analysis_of_churn.ipynb
+│   │   data_splitting.py
+│   │   dumping_model.py
+│   │   EDA.ipynb
+│   │   hyperparameters_tuning.py
+│   │   model_evaluation.py
+│   │   model_training.py
+│   │   run_pipeline.py
+|
 ├───auxiliary_elements
 │   │   _transformer_function.py
 │   │   __init__.py
-│       
+│   │   
+│           
+├───auxiliary_elements_for_as
+│   │   _load_train_test.py
+│   │   _pipeline.py
+│   │   __init__.py
+│      
+│                       
 ├───model
-│       model_cb.joblib
+│       model
 │       
 ├───required_data
 │       tests.csv
 │       
-├───tests
-│   │   test_.py
-│   │   __init__.py
+├───src
+│   │   app.py
+│           
+└───tests
+    │   test_.py
+    │   test_docker_api.py
+    │   __init__.py
 ```
 
 ### Стек
 - FastAPI
-- scikit-learn / catboost / LightGBM (classic Ml)
+- scikit-learn / catboost (classic Ml)
 - optuna
 - Docker
 - pytest
@@ -54,8 +78,8 @@
 ### Как запустить
 Предостовляется несколько способов запуска в зависимости от ваших целей:
 1. Вам необходимо локально собрать docker образ и запустить контейнер:
-    - docker buildx build -t churn-predictor:v1 .
-    - docker run -d -p 8000:8000 --name [имя api] predictor-api:[актуальная версия]
+    - docker buildx build -t [имя образа]:[актуальная версия] .
+    - docker run -d -p 8000:8000 --name [имя api] [имя образа]:[актуальная версия]
 2. Вам необходимо только запустить контейнер:
     - [Устанавливаете актуальную версию образа /predictor-api](https://hub.docker.com/repositories/sdfgsgsjghjfgh)
     - docker run -d -p 8000:8000 --name [имя api] predictor-api:[акткальная версия] 
@@ -77,37 +101,56 @@ LightGBMClassifier is also used in the stack, but in the optimal version of the 
 At the moment, the microservice is capable of processing multiple requests at once (not asynchronously, in the format of dict(orient="records"))
 
 
-### Project structure
+### Структура проекта
 ```Project:.
 │   .gitignore
-│   app.py
 │   Dockerfile
+│   mlflow.db
+│   MLproject
+│   pytest.ini
 │   README.md
 │   requirements.txt
-│   test.ipynb
+│   requirements_dev.txt
 │   
 ├───.github
 │   └───workflows
 │           ci.yml
-│           
-├───analysis_solution
-│       cohort_analysis_of_churn.ipynb
-│       EDA.ipynb
-│       pipeline.ipynb
+│     
 │       
+├───analysis_solution
+│   │   cohort_analysis_of_churn.ipynb
+│   │   data_splitting.py
+│   │   dumping_model.py
+│   │   EDA.ipynb
+│   │   hyperparameters_tuning.py
+│   │   model_evaluation.py
+│   │   model_training.py
+│   │   run_pipeline.py
+|
 ├───auxiliary_elements
 │   │   _transformer_function.py
 │   │   __init__.py
-│       
+│   │   
+│           
+├───auxiliary_elements_for_as
+│   │   _load_train_test.py
+│   │   _pipeline.py
+│   │   __init__.py
+│      
+│                       
 ├───model
-│       model_cb.joblib
+│       model
 │       
 ├───required_data
 │       tests.csv
 │       
-├───tests
-│   │   test_.py
-│   │   __init__.py
+├───src
+│   │   app.py
+│           
+└───tests
+    │   test_.py
+    │   test_docker_api.py
+    │   __init__.py
 ```
 
 ### Stack
@@ -120,8 +163,8 @@ At the moment, the microservice is capable of processing multiple requests at on
 ### How to run
 There are several ways to run it, depending on your goals:
 1. You need to build the docker image locally and run the container:
- - docker buildx build -t churn-predictor:v1 .
- - docker run -d -p 8000:8000 --name [apiname] predictor-api:[actual-version]
+ - docker buildx build -t [image name]:[actual-version] .
+ - docker run -d -p 8000:8000 --name [apiname] [image name]:[actual-version]
 2. You only need to run the container:
  - [Install the latest version of the /predictor-api image](https://hub.docker.com/repositories/sdfgsgsjghjfgh)
  - docker run -d -p 8000:8000 --name [apiname] predictor-api:[actual-version] 
