@@ -7,8 +7,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src src
-COPY auxiliary_elements/_transformer_function.py auxiliary_elements/
-COPY auxiliary_elements/__init__.py auxiliary_elements/__init__.py
+COPY auxiliary_elements auxiliary_elements 
 COPY model model
 
 EXPOSE 8000
