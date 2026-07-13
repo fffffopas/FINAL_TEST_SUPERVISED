@@ -1,9 +1,10 @@
-import pytest
-pytestmark = pytest.mark.docker
-
 import pandas as pd
+import pytest
 import requests
 from sklearn.metrics import recall_score, precision_score, accuracy_score
+
+pytestmark = pytest.mark.docker
+
 
 BASE_URL = "http://localhost:8000"
 
